@@ -1,0 +1,157 @@
+// New to Stylus? Check out http://learnboost.github.io/stylus
+// Use modern CSS thanks to Autoprefixer: https://github.com/ai/autoprefixer
+
+// Import CSS from "node_modules" and "bower_components"
+// thanks to Stylus' "import css" and "paths" options
+
+@import 'prism/themes/prism-okaidia.css'
+// Check out "bower_components/prism/themes/" for available themes
+
+body
+  font-family: Montserrat, sans-serif
+  background-color: #eaeaea
+
+pre.small
+  font-size: .7em
+  padding: 0
+
+sup
+  font-size: 0.3em
+  position: relative
+  top: -1.5em
+
+h1 a
+  border: none
+
+h1.name
+  font-size: 1.3em
+  margin: 0
+
+.avatar
+  filter: grayscale(30%)
+  width: 120px
+  height: @width
+  border-radius: 100%
+  margin: .5em 0
+
+.bespoke-slide
+  z-index: 1
+
+pre
+  padding: .2em !important
+  width: 100%
+  font-size: 0.8em
+
+pre, code
+  margin: 0 !important
+
+pre
+  margin-bottom: 2px !important
+
+.backdrop
+  &--orion
+    background-image: url('../images/orion.jpg')
+    background-position: 0 0
+    &.bespoke-backdrop-active
+      opacity: 0.4
+    &.bespoke-backdrop-before
+      transition-delay: 2s
+  &--lightning
+    background-image: url('../images/lightning.gif')
+    &.bespoke-backdrop-active
+      opacity: 0.75
+  &--poisonapple
+    background-image: url('../images/poisonapple.gif')
+    background-position: 50% 80%
+    &.bespoke-backdrop-active
+      opacity: 0.25
+  &--backbonejs
+    background-color: white
+    background-image: url('../images/backbonejs.png')
+    background-size: 30%
+    background-repeat: no-repeat
+    &.bespoke-backdrop-active
+      opacity: 0.15
+  &--angularjs
+    background-color: white
+    background-image: url('../images/angularjs.png')
+    background-size: 30%
+    background-repeat: no-repeat
+    transition-delay: 1s
+    &.bespoke-backdrop-active
+      opacity: 0.15
+    &.bespoke-backdrop-after
+      transition-delay: 0s
+    &.bespoke-backdrop-before
+      transition-delay: 2s
+  &--chrome
+    background-image: url('../images/chrome.jpg')
+  &--clojure
+    background-image: url('../images/clojure.jpg')
+    &.bespoke-backdrop-active
+      opacity: 0.2
+  &--petehunt
+    filter: grayscale(50%)
+    background-image: url('../images/petehunt.jpeg')
+    background-position: 50% 0
+    transform-origin: 50% 20%
+    transition: opacity 1s ease, transform 16s ease
+    &.bespoke-backdrop-active
+      opacity: 0.2
+  &--leebyron
+    background-image: url('../images/leebyron.jpeg')
+    transform-origin: 50% 40%
+    &.bespoke-backdrop-active
+      opacity: 0.25
+  &--swannodette
+    background-image: url('../images/swannodette.jpg')
+    background-position: 50% 0
+    transform-origin: 60% 40%
+  &--raynos
+    background-image: url('../images/raynos.jpeg')
+    &.bespoke-backdrop-active
+      opacity: 0.4
+  &--mattesch
+    background-image: url('../images/mattesch.png')
+    background-position: 0 100%
+    transform-origin: 20% 50%
+  &--pascalhartig
+    background-image: url('../images/pascalhartig.jpeg')
+    background-position: 0 20%
+    transform-origin: 30% 30%
+    transition: opacity 1s ease, transform 16s ease
+  &--nicolasgallagher
+    background-image: url('../images/nicolasgallagher.jpeg')
+    filter: grayscale(100%)
+    transform-origin: 50% 40%
+    transition: opacity 1s ease, transform 16s ease
+  &--yellow
+    background: #D2D22E
+    &.bespoke-backdrop-active
+      opacity: 1
+  &--still
+    transition: opacity 1s ease
+    transform: none
+  &--bw
+    filter: grayscale(100%)
+
+.yellow
+  color: black
+  h1
+    border-color: currentColor
+
+.bullet.expand
+  transition: all 2s ease
+  opacity: 0
+  overflow-x: hidden
+  overflow-y: visible
+  max-width: 0
+  display: inline-block
+  white-space: nowrap
+  text-align: center
+  line-height: 1.1em
+  position: relative
+  top: .2em
+  &.bespoke-bullet-active
+    opacity: 1
+    max-width: 500px

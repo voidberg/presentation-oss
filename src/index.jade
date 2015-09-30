@@ -1,0 +1,835 @@
+mixin slide(names, slideClasses)
+  if names
+    section(class=names+' '+slideClasses, data-bespoke-backdrop='backdrop ' + names.split(' ').map(function(name) { return 'backdrop--' + name; }).join(' '))
+      block
+  else
+    section
+      block
+
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+    title Aurelia
+
+    link(href="http://fonts.googleapis.com/css?family=Montserrat:400,700|Merriweather:300,400,400italic,700,700italic&subset=latin,latin-ext", rel="stylesheet", type="text/css")
+    link(rel='stylesheet', type='text/css', href='build/build.css')
+
+  body
+
+    article
+
+      +slide
+        h1 Aurelia
+        h4 A next gen JavaScript client framework
+
+      +slide
+        img.avatar(src='images/profile.jpg')
+        h3 Alexandru Badiu
+        h4 @ Corbis
+
+      +slide
+        h1 Aurelia?
+        h2 YAJF
+        quote Aurelia is a next gen JavaScript client framework for mobile, desktop and web that leverages simple conventions to empower your creativity.
+
+      +slide
+        h3 Started by Rob Eisenberg
+        h3 Caliburn.Micro, Durandal
+        h3 Very young, beta coming in a couple of weeks
+        h3 Evergreen browsers + IE9
+
+      +slide
+        h3 ES6 and ES7, transpiled and polyfilled 
+        h3 Small, simple libraries rather than a monolith 
+        h3 No external dependencies
+        h3 ES5, TypeScript and CoffeeScript
+
+      +slide
+        h2 Angular 2
+        pre
+          code.language-javascript.
+            import {Component, View, bootstrap} from 'angular2/angular2';  
+            import {NewItem} from 'components/new-item';  
+            import {TodoList} from 'components/todo-list';
+            @Component({
+              selector: 'todo-app'
+            })
+            @View({
+              templateUrl: 'components/app.html',
+              directives: [NewItem, TodoList]
+            })
+            export class TodoApp {}
+            bootstrap(TodoApp);
+
+      +slide
+        h2 Aurelia
+        pre
+          code.language-javascript.
+            export class TodoApp {}
+
+      +slide
+        h2 Angular 2
+        pre
+          code.language-html.
+            &lt;div&gt;
+              &lt;todo-list&gt;&lt;/todo-list&gt;
+              &lt;new-item&gt;&lt;/new-item&gt;
+            &lt;/div&gt;
+
+      +slide
+        h2 Aurelia
+        pre
+          code.language-html.
+            &lt;template&gt;  
+              &lt;require from=&quot;./todo-list&quot;&gt;&lt;/require&gt;
+              &lt;require from=&quot;./new-item&quot;&gt;&lt;/require&gt;
+              &lt;todo-list&gt;&lt;/todo-list&gt;
+              &lt;new-item&gt;&lt;/new-item&gt;
+            &lt;/template&gt;        
+
+      +slide
+        h2 Angular 2
+        pre
+          code.language-javascript.
+            import {Component, View, NgFor, NgIf} from 'angular2/angular2';  
+            import {TodoItems} from 'services/TodoItems';
+            @Component({
+              selector: 'todo-list',
+              componentServices: [
+                TodoItems
+              ]
+            })
+            @View({
+              templateUrl: 'components/todo-list.html',
+              directives: [NgFor, NgIf]
+            })
+            export class TodoList {  
+              constructor(todoItems: TodoItems) {
+                this.items = todoItems;
+              }
+              setCompleted(item, checked) { 
+                item.completed = checked;
+              }
+              completeAll() {
+                this.items.forEach((item) => {
+                  this.setCompleted(item, true); 
+                });
+              }
+              removeItem(item) {
+                this.items.splice(this.items.indexOf(item), 1);
+              }
+            }
+
+      +slide
+        h2 Aurelia
+        pre
+          code.language-javascript.
+            import {inject} from 'aurelia-framework';
+            import {TodoItems} from 'services/todo-items';
+            @inject(TodoItems)
+            export class TodoList {  
+              constructor(todoitems) {
+                this.items = todoitems.items;
+              }
+              completeAll() {
+                this.items.forEach(item => item.completed = true);
+              }
+              removeItem(item) {
+                this.items.splice(this.items.indexOf(item), 1);
+              }
+            }
+
+      +slide
+        h2 Angular 2
+        pre
+          code.language-html.
+            &lt;div style=&quot;margin-bottom:10px&quot;&gt;  
+              &lt;h1&gt;To Do&lt;/h1&gt;
+              &lt;div style=&quot;padding:5px&quot; *ng-for=&quot;#item of items&quot;&gt;
+                &lt;input type=&quot;checkbox&quot; 
+                  #chkbox [checked]=&quot;item.completed&quot; 
+                  (click)=&quot;setCompleted(item, chkbox.value)&quot;&gt;
+                {{item.text}} &lt;a class=&quot;glyphicon glyphicon-remove&quot; 
+                  (click)=&quot;removeItem(item)&quot;&gt;&lt;/a&gt;
+              &lt;/div&gt;  
+              &lt;button *ng-if=&quot;items.length &gt; 1&quot; class=&quot;btn btn-xs btn-warning&quot;
+              (click)=&quot;completeAll()&quot;&gt;Complete All&lt;/button&gt;
+            &lt;/div&gt;
+
+      +slide
+        h2 Aurelia
+        pre
+          code.language-html.
+            &lt;template style=&quot;margin-bottom:10px&quot;&gt;  
+              &lt;h1&gt;To Do&lt;/h1&gt;
+            &lt;div style=&quot;padding:5px&quot;
+              repeat.for=&quot;item of items&quot;&gt;  
+                &lt;input type=&quot;checkbox&quot; checked.bind=&quot;item.completed&quot; /&gt;
+                ${item.text} &lt;a class=&quot;glyphicon glyphicon-remove&quot; 
+                click.trigger=&quot;$parent.removeItem(item)&quot;&gt;&lt;/a&gt;
+              &lt;/div&gt;
+              &lt;button if.bind=&quot;items.length&quot; class=&quot;btn btn-xs btn-warning&quot;
+              click.trigger=&quot;completeAll()&quot;&gt;Complete All&lt;/button&gt;
+            &lt;/template&gt;  
+
+      +slide
+        h2 Aurelia Framework
+
+        h3 Binding
+        h5 A modern databinding library for JavaScript and HTML.
+        br
+
+        h3 Dependency Injection
+        h5 An extensible dependency injection container.
+        br
+
+        h3 Loader
+        h5 An interface for loading modules and view templates.
+        br
+
+        h3 Templating
+        h5 An extensible HTML templating engine.
+
+      +slide
+        h2 Aurelia Framework
+
+        h3 Task Queue
+        h5 A simple task queue for the browser.
+        br
+
+        h3 Logging
+        h5 A minimal but effective logging mechanism.
+        br
+
+        h3 Metadata
+        h5 Utilities for reading and writing the metadata.
+        br
+
+        h3 Path
+        h5 Utilities for path manipulation.
+
+      +slide
+        h2 Aurelia Framework
+
+        h3 Event aggregator
+        h5 A lightweight pub/sub messaging system.
+        br
+
+        h3 HTTP Client
+        h5 A simple, restful, message-based wrapper around XMLHttpRequest.
+        br
+
+        h3 Router
+        h5 A powerful client-side router.
+        br
+
+        h3 http://github.com/aurelia
+
+      +slide
+        h2 Getting started
+        h3 Recommended: JSPM and SystemJS
+        h3 Bower, DOJO Loader, RequireJS
+        h3 Gulp and Yeoman: generator-aurelia
+        h3 aurelia/skeleton-navigation
+        
+      +slide
+        h2 JSPM
+        h3 YAPM
+        h3 For SystemJS, uses github and npm
+        h3 Custom sources
+        h3 Does bundling
+        h3 ui-select-that-was-forked-solely-to-update-npm-version
+
+      +slide
+        h2 Getting started
+        pre
+          code.language-html.
+            &lt;body aurelia-app=&quot;main&quot;&gt;
+              &lt;script src=&quot;jspm_packages/system.js&quot;&gt;&lt;/script&gt;
+              &lt;script src=&quot;config.js&quot;&gt;&lt;/script&gt;
+              &lt;script&gt;
+                System.import('aurelia-bootstrapper');
+              &lt;/script&gt;
+            &lt;/body&gt;
+        p
+          | Aurelia will load 
+          code.language-html app.js
+          |  and 
+          code.language-html app.html
+          |  by convention.
+
+        p
+          | It will use 
+          code.language-html.
+            main.js
+          |  to configure the app.
+
+      +slide
+        h2 ViewModels
+        h3 A ViewModel, at its basic, is a pure javascript module.
+        pre
+          code.language-javascript.
+            export class Welcome {
+              heading = 'Welcome to the Aurelia Navigation App!';
+              firstName = 'John';
+              lastName = 'Doe';
+              get fullName(){
+                return `${this.firstName} ${this.lastName}`;
+              }
+              submit(){
+                alert(`Welcome, ${this.fullName}!`);
+              }
+            }
+
+      +slide
+        h2 ViewModels
+        h3 Lifecycle.
+        h3
+          code canActivate
+          |  can I navigate to this?
+        h3
+          code activate
+          |  do pre-show work.
+        h3
+          code canDeactivate
+          |  can I navigate away from this?
+        h3
+          code deactivate
+          |  do pre-navigation work.
+
+      +slide
+        h2 DI
+        pre
+          code.language-javascript.
+            import {inject} from 'aurelia-framework';
+            import {HttpClient} from 'aurelia-fetch-client';
+            
+            @inject(HttpClient)
+            export class Welcome {
+              constructor(http) {
+                this.http = http;
+              }
+            }
+
+      +slide
+        h2 DI - Resolvers
+        pre
+          code.language-javascript.
+            @inject(Lazy.of(HttpClient))
+            export class Welcome {
+            }
+        pre
+          code.language-javascript.
+            @inject(All.of(Plugin))
+            export class Welcome {
+            }
+        pre
+          code.language-javascript.
+            @inject(Optional.of(LoggedInUser))
+            export class Welcome {
+            }
+
+        h3 You can also write custom resolvers.
+
+      +slide
+        h2 DI
+        h3 By default everything injected is a singleton.
+        h3
+          | Change that with 
+          code @transient()
+          | .
+        pre
+          code.language-javascript.
+            @transient()
+            @inject(HttpClient)
+            export class Welcome {
+              constructor(http) {
+                this.http = http;
+              }
+            }
+
+      +slide
+        h2 DI
+        h3 Or mark an injectable that it should be instantiated every time.
+        pre
+          code.language-javascript.
+            @transient()
+            export class Foo {
+            }
+            // ...
+            @inject(Foo)
+            export class Bar {
+              constructor(bar) {
+                this.bar = bar;
+              }
+            }
+
+      +slide
+        h2 Templates
+        h3 Simple syntax, borrows from ES6 as much as it can.
+        pre
+          code.language-html.
+            &lt;template&gt;
+              &lt;require from=&quot;foo/bar.css&quot;&gt;&lt;/require&gt;
+              &lt;h2&gt;${heading}&lt;/h2&gt;
+              &lt;form submit.delegate=&quot;submit()&quot;&gt;
+                &lt;div&gt;
+                  &lt;label&gt;First Name&lt;/label&gt;
+                  &lt;input type=&quot;text&quot; value.bind=&quot;firstName&quot;&gt;
+                &lt;/div&gt;
+                &lt;div&gt;
+                  &lt;label&gt;Last Name&lt;/label&gt;
+                  &lt;input type=&quot;text&quot; value.bind=&quot;lastName&quot;&gt;
+                &lt;/div&gt;
+                &lt;div&gt;
+                  &lt;label&gt;Full Name&lt;/label&gt;
+                  &lt;p&gt;${fullName}&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;button type=&quot;submit&quot;&gt;Submit&lt;/button&gt;
+              &lt;/form&gt;
+            &lt;/template&gt;
+
+      +slide
+        h2 Templates
+        h3
+          code require
+          |  tag to load a resource.
+        pre
+          code.language-html.
+            &lt;require from=&quot;my-view.css&quot; as=&quot;scoped&quot;&gt;&lt;/require&gt;  
+
+        h3 Deduping, One-time compilation
+        h3 Local scope, Renaming
+        h3 Bulk loading from packages
+        h3 Custom resources
+        h3 Global resources
+
+      +slide
+        h2 Templates
+        h3
+          code ${variable}
+          |  to output something.
+        h3
+          code repeat.for="item of items"
+        h3
+          code if.bind="condition"
+          |  / 
+          code show.bind="condition"
+
+      +slide
+        h2 Templates
+        h3
+          code compose
+          |  to dynamically render UI.
+        pre
+          code.language-html.
+            &lt;template repeat.for=&quot;item of items&quot;&gt;
+              &lt;compose model.bind=&quot;item&quot; view-model=&quot;widgets/${item.type}&quot;&gt;
+              &lt;/compose&gt;
+            &lt;/template&gt;
+
+        pre
+          code.language-html.
+            &lt;template repeat.for=&quot;item of items&quot;&gt;
+              &lt;compose view=&quot;my-view.html&quot;&gt;&lt;/compose&gt;
+            &lt;/template&gt;
+
+      +slide
+        h2 Templates
+        h3
+          code global-behavior
+          |  use third party widgets with minimal work.
+        h3 Preconfigured for jQuery.
+        pre
+          code.language-html.
+            &lt;div jquery.modal=&quot;show: true; keyboard.bind: allowKeyboard&quot;&gt;...&lt;/div&gt;
+
+      +slide
+        h2 Databinding
+        h3 The databinding is adaptive, it has different strategies based on what you're binding to.
+        h3 SelectValueObserver, CheckedObserver, ValueAttributeObserver, StyleObserver
+        h3 Object.Observe, Object.defineProperty
+        h3 Property dependencies
+        h3 Property observation adaptors
+        h3 Dirty checking
+
+      +slide
+        h2 Property dependencies
+        h3 When possible, define dependencies of a property to avoid dirty checking.
+        pre
+          code.language-javascript.
+            @computedFrom('firstName', 'lastName')
+            get fullName(){  
+              return `${this.firstName} ${this.lastName}`;
+            }
+
+      +slide
+        h2 Property observation adaptors
+        h3 Allows binding to certain types of properties that Aurelia doesn't know about.
+        h3 Breeze entities.
+        h3 KnockoutJS observables.
+
+      +slide
+        h2 ObserverLocator
+        h3 Subscribe to property changes.
+        pre
+          code.language-javascript.
+            var subscription = this.observerLocator
+              .getObserver(this, 'bar')
+              .subscribe(this.onChange);
+
+      +slide
+        h2 Databinding
+        h3
+          | String interpolation  
+          code.
+            value="${foo}"
+          | .
+        h3 "." acts as a binding operator in templates.
+        h3 You can extend it.
+        h3
+          | You'd usually use 
+          code.
+            bind
+          |  which autodetects the type of binding.
+        h3
+          code.
+            .bind
+          | , 
+          code.
+            .one-way
+          | , 
+          code.
+            .two-way
+          | , 
+          code.
+            .one-time
+
+      +slide
+        h2 Databinding
+        h3 Events
+        h3
+          code.
+            .delegate
+          | , 
+          code.
+            .trigger
+          | , 
+          code.
+            .call
+        h3
+          | It's recommended to use 
+          code.
+            delegate
+          | .
+        pre
+          code.language-html.
+            &lt;button click.delegate=&quot;sayHello()&quot;&gt;Say Hello&lt;/button&gt;
+
+        pre
+          code.language-html.
+            &lt;custom-element foo.call=&quot;sayHello()&quot;&gt;Say Hello&lt;/custom-element&gt;
+
+      +slide
+        h2 Databinding
+        h3
+          code ref
+        h3 Creates a local name which can be referenced in another binding expression.
+        h3 Connects different components to each other.
+        pre
+          code.language-html.
+            &lt;producer producer.ref=&quot;producerVM&quot;&gt;&lt;/producer&gt;
+            &lt;consumer input.bind=&quot;producerVM.output&quot;&gt;&lt;/consumer&gt;            
+
+      +slide
+        h2 Extending HTML
+        h3 Custom attributes
+        h3 Custom elements
+        h3 Surrogate behaviors
+
+      +slide
+        h2 Custom attributes
+        pre
+          code.language-javascript.
+            @customAttribute('show')
+            @inject(Element)
+            export class Show {
+              constructor(element) {
+                this.element = element;
+              }
+
+              valueChanged(newValue){
+                if (newValue) {
+                  this.element.classList.remove('aurelia-hide');
+                } else {
+                  this.element.classList.add('aurelia-hide');
+                }
+              }
+            }
+
+      +slide
+        h2 Custom attributes
+        pre
+          code.language-html.
+            &lt;div show.bind=&quot;isSaving&quot; class=&quot;spinner&quot;&gt;&lt;/div&gt;
+        pre
+          code.language-javascript.
+            @inject(Element)
+            export class ShowCustomAttribute {
+            }
+
+      +slide
+        h2 Custom attributes
+        h3 Multiple properties
+        pre
+          code.language-javascript.
+            @customAttribute('my-attribute')
+            export class MyAttribute {
+              @bindable foo;
+              @bindable bar;
+            }
+
+        pre
+          code.language-html.
+            &lt;div my-attribute=&quot;foo: some literal; bar.bind: some.expr&quot;&gt;&lt;/div&gt;
+
+      +slide
+        h2 Custom attributes
+        h3
+          | Template controllers via 
+          code
+            @templateController
+          | .
+        h3 Converts DOM into a inner template.
+        h3 Decide when, where and how many times the template is instantiated.
+        h3
+          | Implement attributes such as 
+          code.
+            if
+          |  or 
+          code.
+            repeat
+          | .
+
+      +slide
+        h2 Custom elements
+        h3
+          | Can work with 
+          code.
+            Light DOM
+          |  and 
+          code.
+            Shadow DOM
+          | .
+        h3
+          | Can work with content selectors when 
+          code.
+            Shadow DOM
+          |  is not available.
+
+      +slide
+        h2 Custom elements
+        pre
+          code.language-javascript.
+            import {customElement, bindable} from 'aurelia-framework';
+            @customElement('say-hello')
+            export class SayHello {
+              @bindable to;
+
+              speak(){
+                alert(`Hello ${this.to}!`);
+              }
+            }
+        pre
+          code.language-javascript.
+            export class SayHelloCustomElement {
+            }
+
+      +slide
+        h2 Custom elements
+        pre
+          code.language-html.
+            &lt;template&gt;
+              &lt;button click.trigger=&quot;speak()&quot;&gt;Say Hello To ${to}&lt;/button&gt;
+            &lt;/template&gt;
+
+      +slide
+        h2 Custom elements
+        h3
+          code @processContent(false|Function)
+        h3
+          code @useView(path)
+        h3
+          code @noView()
+        h3
+          code @containerless()
+        h3
+          code @useShadowDOM()
+
+      +slide
+        h2 Content selectors
+        h3 Like the W3C spec
+        pre
+          code.language-html.
+            &lt;modal&gt;  
+              &lt;modal-header title=&quot;Edit Person&quot;&gt;&lt;/modal-header&gt;
+              &lt;modal-body content=&quot;person-information&quot;&gt;&lt;/modal-body&gt;
+              &lt;modal-footer buttons.bind=&quot;['Cancel']&quot;&gt;&lt;/modal-footer&gt;
+            &lt;/modal&gt;           
+        pre
+          code.language-html.
+            &lt;div class=&quot;modal-content&quot;&gt;
+              &lt;content select=&quot;modal-header&quot;&gt;&lt;/content&gt;
+              &lt;content select=&quot;modal-body&quot;&gt;&lt;/content&gt;
+              &lt;content select=&quot;modal-footer&quot;&gt;&lt;/content&gt;
+            &lt;/div&gt;
+
+      +slide
+        h2 Template parts
+        h3 When you can't use content selectors
+        pre
+          code.language-html.
+            &lt;li class=&quot;foo&quot; repeat.for=&quot;item of items&quot;&gt;
+              &lt;template replaceable part=&quot;item-template&quot;&gt;
+                Original: ${item}
+              &lt;/template&gt;
+            &lt;/li&gt;
+        pre
+          code.language-html.
+            &lt;example&gt;
+              &lt;template replace-part=&quot;item-template&quot;&gt;
+                Replacement: ${item} ${$parent.$parent.fullName} 
+                &lt;button click.delegate=&quot;$parent.$parent.welcome()&quot;&gt;Test&lt;/button&gt;
+              &lt;/template&gt;
+            &lt;/example&gt;
+
+      +slide
+        h2 HTML only
+        h3 Sometimes you don't need a VM
+        pre
+          code.language-html.
+            &lt;template bindable=&quot;router,foo&quot;&gt;
+              ...
+            &lt;/template&gt;
+        pre
+          code.language-html.
+            &lt;nav-bar router.bind=&quot;router&quot; foo=&quot;bar&quot;&gt;&lt;/nav-bar&gt;
+
+      +slide
+        h2 Bypass rendering
+        h3 Sometimes you want to use React or Riot
+        pre
+          code.language-javascript.
+            @noView()
+            export class MyCustomElement {
+              @bindable foo;
+              constructor(element) {
+                this.element = element;
+              }              
+              bind() {
+                React.render(&lt;ReactElem foo={this.foo} /&gt;, this.element);
+              }              
+            }
+
+      +slide
+        h2 Surrogate behaviour
+        h3 Stand-in for the actual HTML element at runtime
+        h3 Without
+        pre
+          code.language-html.
+            &lt;progress-bar progress.bind=&quot;progress&quot;&gt;&lt;/progress-bar&gt;
+        h3 With
+        pre
+          code.language-html.
+            &lt;template role=&quot;progress-bar&quot; aria-valuenow.bind=&quot;progress&quot;
+              aria-valuemin=&quot;0&quot; aria-valuemax=&quot;100&quot;&gt;
+              &lt;div class=&quot;progress&quot; css=&quot;width:${progress}%&quot;&gt;&lt;/div&gt;
+            &lt;/template&gt;
+        pre
+          code.language-html.
+            &lt;progress-bar&gt;&lt;/progress-bar&gt;
+
+      +slide
+        h2 Router
+        pre
+          code.language-javascript.
+            export class App {
+              configureRouter(config, router){
+                config.map([
+                  { route: ['', 'home'], name: 'home', moduleId: 'home/index' },
+                  { route: 'users/:id/detail', name: 'userDetail' ... },
+                  { route: 'files*path', name: 'files', moduleId: 'files/index' }
+                ]);
+              }
+            }
+        pre
+          code.language-html.
+            &lt;router-view&gt;&lt;/router-view&gt;
+
+      +slide
+        h2 Router
+        h3 Static routes, parameterized routes, wildcard routes
+        h3 Child routers
+        h3 Activation strategies
+        h3 Multiple ViewPorts
+        pre
+          code.language-javascript.
+            config.mapUnknownRoutes(instruction => {
+              //check instruction.fragment
+              //set instruction.config.moduleId
+            });
+
+      +slide
+        h2 Router
+        h3 Navigation pipeline
+        pre
+          code.language-javascript.
+            config.addPipelineStep('authorize', AuthorizeStep);
+        pre
+          code.language-javascript.
+            class AuthorizeStep {
+              run(routingContext, next) {
+                if (routingContext.nextInstructions.some(i => i.config.auth)) {
+                  var isLoggedIn = /* insert magic here */false;
+                  if (!isLoggedIn) {
+                    return next.cancel(new Redirect('login'));
+                  }
+                }
+                return next();
+              }
+            }
+
+      +slide
+        h2 Other nice things
+        h3 Value converters
+        h3 EventAggregator for pub/sub
+        h3 HTTP Client
+        h3 Change the conventions
+        h3 Plugins
+        h3 Logging
+        h3 Debugging
+
+      +slide
+        h2 Resources
+        h3
+          code voidberg/awesome-aurelia
+        h3
+          code tfrydrychewicz/aurelia-flux
+          |  and  
+          code voidberg/aurelia-flux-demo
+        h3
+          code voidberg/aurelia-redux-todo
+        h3
+          code voidberg/aurelia-phonecat
+
+      +slide
+        h2 Thank you!
+        h3.
+          andu@ctrlz.ro
+        h3
+          @voidberg
+
+
+    script(src='build/build.js')
